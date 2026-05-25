@@ -1,5 +1,10 @@
 cmake_minimum_required(VERSION 2.6)
 project(rtt_typelib)
+
+set(CMAKE_CXX_STANDARD 17)
+set(CMAKE_CXX_STANDARD_REQUIRED ON)
+set(CMAKE_CXX_EXTENSIONS OFF)
+
 include(FindPkgConfig)
 
 set(NO_ROS_PACKAGE TRUE)
@@ -69,4 +74,3 @@ string(REPLACE "include/orocos" "include" INSTALLED_PC_CONTENTS
     "${INSTALLED_PC_CONTENTS}")
 file(WRITE ${CMAKE_CURRENT_BINARY_DIR}/rtt_typelib-${OROCOS_TARGET}.pc
     ${INSTALLED_PC_CONTENTS})
-
