@@ -7,6 +7,23 @@ using namespace orogen_transports;
 
 typedef TypelibMarshallerBase::Handle Handle;
 
+namespace
+{
+    RTT::types::TypeInfo* findTypeInfo(std::string const& type)
+    {
+        RTT::types::TypeInfoRepository::shared_ptr type_registry =
+            RTT::types::TypeInfoRepository::Instance();
+
+        RTT::types::TypeInfo* ti = type_registry->type(type);
+        if (!ti && !type.empty() && type[0] == '/')
+        {
+            // Some base types are registered without their Typelib-leading slash.
+            ti = type_registry->type(type.substr(1));
+        }
+        return ti;
+    }
+}
+
 TypelibMarshallerBase::TypelibMarshallerBase(bool plain,
         std::string const& typelib_typename,
         std::string const& orocos_typename,
@@ -66,19 +83,9 @@ void TypelibMarshallerBase::setTypelibSample(Handle* data, Typelib::Value typeli
 
 orogen_transports::TypelibMarshallerBase* orogen_transports::getMarshallerFor(std::string const& type)
 {
-    RTT::types::TypeInfoRepository::shared_ptr type_registry =
-        RTT::types::TypeInfoRepository::Instance();
-    RTT::types::TypeInfo* ti = type_registry->type(type);
+    RTT::types::TypeInfo* ti = findTypeInfo(type);
     if (!ti)
-    {
-	// Try harder. Some base types don't have a
-	// typelib-normalized name, so we should look
-	// for the type without the leading slash
-	if (!type.empty() && type[0] == '/')
-	    ti = type_registry->type(type.substr(1));
-	if (!ti)
-	    throw std::runtime_error("type " + type + " is not registered in the RTT type system");
-    }
+        throw std::runtime_error("type " + type + " is not registered in the RTT type system");
 
     if (!ti->hasProtocol(orogen_transports::TYPELIB_MARSHALLER_ID))
         throw std::runtime_error("type " + type + " is registered in the RTT type system, but does not have a typelib transport");
