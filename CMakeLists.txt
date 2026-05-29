@@ -44,6 +44,20 @@ if (OROCOS-RTT_MQUEUE_FOUND)
         ${OROCOS-RTT_MQUEUE_LIBRARIES})
 endif()
 
+option(BUILD_TESTING "Build rtt_typelib tests" OFF)
+if(BUILD_TESTING)
+    enable_testing()
+
+    add_executable(get_marshaller_for_test tests/get_marshaller_for_test.cpp)
+    target_include_directories(get_marshaller_for_test PRIVATE
+        ${CMAKE_CURRENT_SOURCE_DIR}
+        ${OROCOS-RTT_INCLUDE_DIRS})
+    target_link_libraries(get_marshaller_for_test rtt-typelib)
+    add_test(NAME get_marshaller_for_test COMMAND get_marshaller_for_test)
+    set_tests_properties(get_marshaller_for_test PROPERTIES
+        ENVIRONMENT "LD_LIBRARY_PATH=$<TARGET_FILE_DIR:rtt-typelib>:$ENV{LD_LIBRARY_PATH}")
+endif()
+
 orocos_install_headers( TypelibMarshallerBase.hpp TypelibMarshaller.hpp
     TypelibMarshallerHandle.hpp
     MQTypelibMarshaller.hpp OpaqueTypelibMarshaller.hpp
