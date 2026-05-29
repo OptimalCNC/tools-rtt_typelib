@@ -74,7 +74,8 @@ orogen_transports::TypelibMarshallerBase* orogen_transports::getMarshallerFor(st
 	// Try harder. Some base types don't have a
 	// typelib-normalized name, so we should look
 	// for the type without the leading slash
-	ti = type_registry->type(type.substr(1));
+	if (!type.empty() && type[0] == '/')
+	    ti = type_registry->type(type.substr(1));
 	if (!ti)
 	    throw std::runtime_error("type " + type + " is not registered in the RTT type system");
     }
@@ -102,4 +103,3 @@ void* orogen_transports::getOpaqueValue(std::string const& expected_type, Typeli
     typelib_marshaller->deleteHandle(handle);
     return opaque_sample;
 }
-
