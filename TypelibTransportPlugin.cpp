@@ -26,13 +26,17 @@ bool TypelibTransportPlugin::loadRegistry()
         return true;
     }
     catch(std::exception const& e) {
-        log(Error) << "cannot load the typekit's Typelib registry from" << endlog();
-        log(Error) << "  " << path << endlog();
+        Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
+                           "cannot load the typekit's Typelib registry from");
+        Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
+                           "  %s", path.c_str());
 #ifndef HAS_ROSLIB
-        log(Error) << "remember to do 'make install' before you use the oroGen-generated libraries ?" << endlog();
+        Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
+                           "remember to do 'make install' before you use the oroGen-generated libraries ?");
 #endif
-        log(Error) << endlog();
-        log(Error) << "the Typelib transport will not be available for types defined in this typekit" << endlog();
+        Logger::log().logf(Logger::Error, "TypelibTransportPlugin", "");
+        Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
+                           "the Typelib transport will not be available for types defined in this typekit");
     }
     return false;
 }
@@ -43,4 +47,3 @@ std::string orogen_transports::TypelibTransportPlugin::getTypekitName() const
 { return "/orogen/" + m_basename; }
 std::string orogen_transports::TypelibTransportPlugin::getName() const
 { return "/orogen/" + m_basename + "/TYPELIB"; }
-
