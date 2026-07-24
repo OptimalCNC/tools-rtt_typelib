@@ -34,7 +34,8 @@ bool TypelibTransportPlugin::loadRegistry()
         Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
                            "remember to do 'make install' before you use the oroGen-generated libraries ?");
 #endif
-        Logger::log().logf(Logger::Error, "TypelibTransportPlugin", "");
+        Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
+                           "reason: %s", e.what());
         Logger::log().logf(Logger::Error, "TypelibTransportPlugin",
                            "the Typelib transport will not be available for types defined in this typekit");
     }
